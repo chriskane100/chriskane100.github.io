@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Race Pace Planner</title>
+  <style>
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 2em;
+      color: #333;
+    }
+    .content-wrapper {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: left;
+      color: #fc4c02;
+    }
+    .table-wrapper,
+    .summary-wrapper {
+      width: 100%;
+      max-width: 100%;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 1em;
+      margin-top: 2em;
+    }
+    .card h2 {
+      margin-top: 0;
+      color: #fc4c02;
+    }
+    .summary {
+      font-size: 1.1em;
+      margin-top: 0.5em;
+      display: block;
+      text-align: left;
+    }
+    .summary p {
+      margin: 0.3em 0;
+    }
+    .summary-section {
+      margin-top: 1em;
+    }
+    .summary-section h3 {
+      margin-bottom: 0.3em;
+      color: #555;
+      font-size: 1em;
+      font-weight: bold;
+    }
+    table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    th, td {
+      width: 20%;
+      padding: 0.75em;
+      border-bottom: 1px solid #eee;
+      vertical-align: middle;
+      text-align: center;
+      word-wrap: break-word;
+    }
+    input[type="number"], input[type="text"] {
+      text-align: center;
+      width: 90%;
+      padding: 0.3em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    button {
+      cursor: pointer;
+      font-size: 1em;
+      padding: 0.4em 0.8em;
+      border-radius: 4px;
+    }
+    .delete-btn {
+      background: none;
+      border: none;
+      font-size: 1.2em;
+      color: #fc4c02;
+    }
+    #addSegmentBtn {
+      display: block;
+      margin: 1.5em 0;
+      background-color: #fc4c02;
+      color: white;
+      border: none;
+      font-weight: bold;
+      font-size: 1.1em;
+      padding: 0.6em 1.2em;
+      border-radius: 4px;
+    }
+    #addSegmentBtn:hover {
+      background-color: #e54300;
+    }
+  </style>
+</head>
+<body>
+  <div class="content-wrapper">
+    <h1>Race Pace Planner</h1>
+    <div class="table-wrapper">
+      <table id="paceTable">
+        <thead>
+          <tr>
+            <th>From (km)</th>
+            <th>To (km)</th>
+            <th>Pace (mm:ss)</th>
+            <th>Cumulative Time</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="from-value">0</td>
+            <td><input type="number" step="0.1" class="to-km"></td>
+            <td><input type="text" placeholder="mm:ss"></td>
+            <td class="cumulative"></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+      <button id="addSegmentBtn">Add segment</button>
+    </div>
+
+    <div class="summary-wrapper">
+      <div class="card">
+        <h2>Summary</h2>
+        <div class="summary">
+          <div class="summary-section">
+            <h3>Perfect Race</h3>
+            <p><strong>Total Distance:</strong> <span id="totalDistance">0.0</span> km</p>
+            <p><strong>Average Pace:</strong> <span id="averagePace">00:00</span> /km</p>
+            <p><strong>Total Time:</strong> <span id="totalTime">00:00:00</span></p>
+          </div>
+          <div class="summary-section">
+            <h3 title="Accounts for running 1% extra distance and applies final segment pace to estimate total time.">Realistic Race &#9432;</h3>
+            <p><strong>Adjusted Distance:</strong> <span id="adjustedDistance">0.0</span> km</p>
+            <p><strong>Realistic Time:</strong> <span id="realisticTime">00:00:00</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function parsePace(paceStr) {
+      const [min, sec] = paceStr.split(":").map(Number);
+      return min * 60 + sec;
+    }
+
+    function formatTime(seconds) {
+      const hrs = Math.floor(seconds / 3600);
+      const min = Math.floor((seconds % 3600) / 60);
+      const sec = Math.round(seconds % 60);
+      return `${hrs.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    function formatPace(secondsPerKm) {
+      const min = Math.floor(secondsPerKm / 60);
+      const sec = Math.round(secondsPerKm % 60);
+      return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    function updateFromValues() {
+      const rows = document.querySelectorAll("#paceTable tbody tr");
+      for (let i = 1; i < rows.length; i++) {
+        const prevTo = parseFloat(rows[i - 1].querySelector(".to-km").value);
+        if (!isNaN(prevTo)) {
+          rows[i].querySelector(".from-value").textContent = prevTo.toFixed(1);
+        }
+      }
+    }
+
+    function updateCumulativeTimes() {
+      updateFromValues();
+      const rows = document.querySelectorAll("#paceTable tbody tr");
+      let totalTime = 0;
+      let totalDistance = 0;
+      let finalSegmentPace = 0;
+      rows.forEach((row, index) => {
+        const from = parseFloat(row.querySelector(".from-value").textContent);
+        const to = parseFloat(row.querySelector(".to-km").value);
+        const paceStr = row.cells[2].querySelector("input").value;
+        if (!isNaN(from) && !isNaN(to) && paceStr.includes(":")) {
+          const pace = parsePace(paceStr);
+          const distance = to - from;
+          if (distance > 0) {
+            totalTime += distance * pace;
+            totalDistance += distance;
+            row.querySelector(".cumulative").textContent = formatTime(totalTime);
+            if (index === rows.length - 1) {
+              finalSegmentPace = pace;
+            }
+          } else {
+            row.querySelector(".cumulative").textContent = "-";
+          }
+        } else {
+          row.querySelector(".cumulative").textContent = "-";
+        }
+      });
+
+      document.getElementById("totalDistance").textContent = totalDistance.toFixed(1);
+      document.getElementById("totalTime").textContent = formatTime(totalTime);
+      document.getElementById("averagePace").textContent = totalDistance > 0 ? formatPace(totalTime / totalDistance) : "00:00";
+
+      const adjustedDistance = totalDistance * 1.01;
+      const extraDistance = adjustedDistance - totalDistance;
+      const realisticTime = totalTime + extraDistance * finalSegmentPace;
+      document.getElementById("adjustedDistance").textContent = adjustedDistance.toFixed(2);
+      document.getElementById("realisticTime").textContent = formatTime(realisticTime);
+    }
+
+    function addRow() {
+      const rows = document.querySelectorAll("#paceTable tbody tr");
+      const lastRow = rows[rows.length - 1];
+      const from = parseFloat(lastRow.querySelector(".to-km").value);
+      const lastPace = lastRow.cells[2].querySelector("input").value;
+      if (isNaN(from)) return;
+      const to = from + 5;
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
+        <td class="from-value">${from.toFixed(1)}</td>
+        <td><input type="number" step="0.1" class="to-km" value="${to.toFixed(1)}" autofocus></td>
+        <td><input type="text" placeholder="mm:ss" value="${lastPace}"></td>
+        <td class="cumulative"></td>
+        <td><button class="delete-btn" onclick="removeRow(this)">🗑️</button></td>
+      `;
+      document.querySelector("#paceTable tbody").appendChild(newRow);
+      updateCumulativeTimes();
+      newRow.querySelector(".to-km").focus();
+    }
+
+    function removeRow(button) {
+      const row = button.closest("tr");
+      row.remove();
+      updateCumulativeTimes();
+    }
+
+    document.querySelector("#paceTable").addEventListener("input", updateCumulativeTimes);
+    document.querySelector("#addSegmentBtn").addEventListener("click", addRow);
+  </script>
+</body>
+</html>
