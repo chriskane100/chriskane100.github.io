@@ -115,3 +115,25 @@ button {
 #addSegmentBtn:hover {
   background-color: #333333;
 }
+
+.pace-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3em;
+}
+
+.pace-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.pace-buttons button {
+  padding: 0;
+  font-size: 0.8em;
+  line-height: 1;
+  background: none;
+  border: none;
+  color: #000;
+  cursor: pointer;
+}
