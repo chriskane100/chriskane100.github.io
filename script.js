@@ -71,7 +71,15 @@
       newRow.innerHTML = `
         <td class="from-value">${from.toFixed(1)}</td>
         <td><input type="number" step="0.1" class="to-km" value="" autofocus></td>
-        <td><input type="text" placeholder="mm:ss" value="${lastPace}"></td>
+        <td>
+            <div class="pace-wrapper">
+            <input type="text" class="pace-input" placeholder="mm:ss" value="${lastPace}">
+            <div class="pace-buttons">
+              <button type="button" class="pace-up" onclick="adjustPace(this, 1)">▲</button>
+              <button type="button" class="pace-down" onclick="adjustPace(this, -1)">▼</button>
+            </div>
+          </div>
+        </td>
         <td class="cumulative"></td>
         <td><button class="delete-btn" title="Delete" onclick="removeRow(this)"><i class="fas fa-trash"></i></button></td>
       `;
@@ -81,15 +89,20 @@
     }
 
     function adjustPace(button, deltaSeconds) {
-      const input = button.parentNode.querySelector(".pace-input");
-      const [min, sec] = input.value.split(":").map(Number);
-      let total = min * 60 + sec + deltaSeconds;
+      const input = button.closest(".pace-wrapper").querySelector(".pace-input");
+      const [minStr, secStr] = input.value.split(":");
+      let min = parseInt(minStr, 10);
+      let sec = parseInt(secStr, 10);
+      if (isNaN(min)) min = 0;
+      if (isNaN(sec)) sec = 0;
     
-      total = Math.max(0, total); // prevent negative pace
-      const newMin = Math.floor(total / 60);
-      const newSec = total % 60;
+      let totalSeconds = min * 60 + sec + deltaSeconds;
+      totalSeconds = Math.max(0, totalSeconds); // prevent negatives
     
+      const newMin = Math.floor(totalSeconds / 60);
+      const newSec = totalSeconds % 60;
       input.value = `${newMin.toString().padStart(2, '0')}:${newSec.toString().padStart(2, '0')}`;
+    
       updateCumulativeTimes();
     }
 
