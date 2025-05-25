@@ -78,8 +78,8 @@
         <td><input type="number" step="0.1" class="to-km" value="" autofocus></td>
         <td><input type="text" placeholder="mm:ss" value="${lastPace}"></td>
         <td class="cumulative"></td>
-        <td><button class="delete-btn" onclick="removeRow(this)">🗑️</button></td>
-      `;
+        <td><button class="delete-btn" title="Delete" onclick="removeRow(this)"><i class="fas fa-trash"></i></button></td>
+      ;
       document.querySelector("#paceTable tbody").appendChild(newRow);
       updateCumulativeTimes();
       newRow.querySelector(".to-km").focus();
