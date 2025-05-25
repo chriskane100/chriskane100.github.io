@@ -228,7 +228,7 @@
       const from = parseFloat(lastRow.querySelector(".to-km").value);
       const lastPace = lastRow.cells[2].querySelector("input").value;
       if (lastRow.querySelector(".to-km").value !== "" && isNaN(from)) return;
-      const to = from + 5;
+      const to = from;
       const newRow = document.createElement("tr");
       newRow.innerHTML = `
         <td class="from-value">${from.toFixed(1)}</td>
