@@ -40,15 +40,10 @@
           const pace = parsePace(paceStr);
           const distance = to - from;
           if (distance > 0) {
-            totalTime += distance * pace;
-            totalDistance += distance;
-            row.querySelector(".cumulative").textContent = formatTime(totalTime);
-            if (index === rows.length - 1) {
-              finalSegmentPace = pace;
+              totalTime += distance * pace;
+              totalDistance += distance;
             }
-          } else {
-            row.querySelector(".cumulative").textContent = "-";
-          }
+            row.querySelector(".cumulative").textContent = formatTime(totalTime);
         } else {
           row.querySelector(".cumulative").textContent = "-";
         }
