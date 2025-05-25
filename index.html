@@ -227,7 +227,7 @@
       const lastRow = rows[rows.length - 1];
       const from = parseFloat(lastRow.querySelector(".to-km").value);
       const lastPace = lastRow.cells[2].querySelector("input").value;
-      if (isNaN(from)) return;
+      if (lastRow.querySelector(".to-km").value !== "" && isNaN(from)) return;
       const to = from + 5;
       const newRow = document.createElement("tr");
       newRow.innerHTML = `
