@@ -228,11 +228,11 @@
       const from = parseFloat(lastRow.querySelector(".to-km").value);
       const lastPace = lastRow.cells[2].querySelector("input").value;
       if (lastRow.querySelector(".to-km").value !== "" && isNaN(from)) return;
-      const to = from;
+      const to = "";
       const newRow = document.createElement("tr");
       newRow.innerHTML = `
         <td class="from-value">${from.toFixed(1)}</td>
-        <td><input type="number" step="0.1" class="to-km" value="${to.toFixed(1)}" autofocus></td>
+        <td><input type="number" step="0.1" class="to-km" value="" autofocus></td>
         <td><input type="text" placeholder="mm:ss" value="${lastPace}"></td>
         <td class="cumulative"></td>
         <td><button class="delete-btn" onclick="removeRow(this)">🗑️</button></td>
