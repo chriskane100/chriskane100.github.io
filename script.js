@@ -39,9 +39,10 @@
         if (!isNaN(from) && !isNaN(to) && paceStr.includes(":")) {
           const pace = parsePace(paceStr);
           const distance = to - from;
-          if (distance > 0) {
+            if (distance > 0) {
               totalTime += distance * pace;
               totalDistance += distance;
+              finalSegmentPace = pace;
             }
             row.querySelector(".cumulative").textContent = formatTime(totalTime);
         } else {
