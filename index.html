@@ -24,7 +24,9 @@
           <tr>
             <td class="from-value">0</td>
             <td><input type="number" step="0.1" class="to-km" value="5"></td>
-            <td><input type="text" placeholder="mm:ss" value="4:00"></td>
+            <td><input type="text" value="4:00" class="pace-input">
+<button onclick="adjustPace(this, 1)">▲</button>
+<button onclick="adjustPace(this, -1)">▼</button></td>
             <td class="cumulative"></td>
             <td></td>
           </tr>
