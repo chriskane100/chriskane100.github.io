@@ -80,6 +80,19 @@
       newRow.querySelector(".to-km").focus();
     }
 
+    function adjustPace(button, deltaSeconds) {
+      const input = button.parentNode.querySelector(".pace-input");
+      const [min, sec] = input.value.split(":").map(Number);
+      let total = min * 60 + sec + deltaSeconds;
+    
+      total = Math.max(0, total); // prevent negative pace
+      const newMin = Math.floor(total / 60);
+      const newSec = total % 60;
+    
+      input.value = `${newMin.toString().padStart(2, '0')}:${newSec.toString().padStart(2, '0')}`;
+      updateCumulativeTimes();
+    }
+
     function removeRow(button) {
       const row = button.closest("tr");
       row.remove();
