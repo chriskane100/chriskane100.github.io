@@ -71,7 +71,7 @@
       const newRow = document.createElement("tr");
       newRow.innerHTML = `
         <td class="from-value">${from.toFixed(1)}</td>
-        <td><input type="number" step="0.1" class="to-km" value="" autofocus></td>
+        <td><input type="number" step="0.1" class="to-km" value="${from.toFixed(1)}" autofocus></td>
         <td>
             <div class="pace-wrapper">
             <input type="text" class="pace-input" placeholder="mm:ss" value="${lastPace}">
