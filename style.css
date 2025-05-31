@@ -137,3 +137,40 @@ button {
   color: #000;
   cursor: pointer;
 }
+
+@media (max-width: 768px) {
+  th, td {
+    padding: 0.4em;
+    font-size: 0.8em;
+  }
+
+  .pace-wrapper {
+    flex-direction: column;
+    gap: 0.2em;
+  }
+
+  .pace-buttons {
+    flex-direction: row;
+    gap: 0.5em;
+  }
+
+  input[type="number"], input[type="text"] {
+    font-size: 0.9em;
+    padding: 0.4em;
+  }
+
+  button {
+    font-size: 0.9em;
+    padding: 0.5em 1em;
+  }
+
+  .summary {
+    font-size: 1em;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
