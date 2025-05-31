@@ -174,3 +174,9 @@ button {
     white-space: nowrap;
   }
 }
+
+@media (max-width: 768px) {
+  .pace-buttons {
+    display: none;
+  }
+}
