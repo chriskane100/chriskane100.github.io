@@ -69,21 +69,28 @@
         const toInitial = from.toFixed(1);
         const minTo = from;
       const newRow = document.createElement("tr");
-      newRow.innerHTML = `
-        <td class="from-value">${from.toFixed(1)}</td>
-        <td><input type="number" step="0.1" class="to-km" value="" autofocus></td>
-        <td>
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+          <td class="from-value">${toInitial}</td>
+          <td>
+            <input type="number" step="0.1" class="to-km" value="${toInitial}" min="${minTo}" autofocus>
+          </td>
+          <td>
             <div class="pace-wrapper">
-            <input type="text" class="pace-input" placeholder="mm:ss" value="${lastPace}">
-            <div class="pace-buttons">
-              <button type="button" class="pace-up" onclick="adjustPace(this, 1)">▲</button>
-              <button type="button" class="pace-down" onclick="adjustPace(this, -1)">▼</button>
+              <input type="text" class="pace-input" placeholder="mm:ss" value="${lastPace}">
+              <div class="pace-buttons">
+                <button type="button" class="pace-up" onclick="adjustPace(this, 1)">▲</button>
+                <button type="button" class="pace-down" onclick="adjustPace(this, -1)">▼</button>
+              </div>
             </div>
-          </div>
-        </td>
-        <td class="cumulative"></td>
-        <td><button class="delete-btn" title="Delete" onclick="removeRow(this)"><i class="fas fa-trash"></i></button></td>
-      `;
+          </td>
+          <td class="cumulative"></td>
+          <td>
+            <button class="delete-btn" title="Delete" onclick="removeRow(this)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        `;
       document.querySelector("#paceTable tbody").appendChild(newRow);
       updateCumulativeTimes();
       newRow.querySelector(".to-km").focus();
