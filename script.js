@@ -64,10 +64,10 @@
     function addRow() {
       const rows = document.querySelectorAll("#paceTable tbody tr");
       const lastRow = rows[rows.length - 1];
-      const from = parseFloat(lastRow.querySelector(".to-km").value);
-      const lastPace = lastRow.cells[2].querySelector("input").value;
-      if (lastRow.querySelector(".to-km").value !== "" && isNaN(from)) return;
-      const to = "";
+        const from = parseFloat(lastRow.querySelector(".to-km").value);
+        if (isNaN(from)) return;
+        const toInitial = from.toFixed(1);
+        const minTo = from;
       const newRow = document.createElement("tr");
       newRow.innerHTML = `
         <td class="from-value">${from.toFixed(1)}</td>
