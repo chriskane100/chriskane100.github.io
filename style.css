@@ -78,8 +78,20 @@ th, td {
 
 td:last-child,
 th:last-child {
-  width: 1%;
-  white-space: nowrap;
+  width: 48px;              /* enough space for the delete icon */
+  white-space: normal;      /* prevent overflow */
+}
+
+.delete-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  color: #000000;
 }
 
 input[type="number"], input[type="text"] {
